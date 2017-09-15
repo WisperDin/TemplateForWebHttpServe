@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	//加对应database的lib
 	_ "github.com/lib/pq"
-	"time"
+	"log"
 )
 
 var Db *sql.DB
@@ -20,22 +20,12 @@ func InitDB(host, port, user, pwd, dbName, driverName string) error {
 	Db = db
 	err := Db.Ping()
 	if err != nil {
-		//自动重连
-		go reInit(dateSource)
+		log.Println("InitDB failed at Ping "+err.Error())
+		panic(err)
+		return err
 	}
+	//初始化table
+	initTable()
 	return nil
 }
 
-func reInit(dateSource string) {
-	for {
-		db, _ := sql.Open(dBDriverName, dateSource)
-		if err := db.Ping(); err == nil {
-			Db = db
-			break
-		} else {
-			fmt.Println("数据库连接失败，2分钟后重试")
-			time.Sleep(time.Minute * 2)
-			reInit(dateSource)
-		}
-	}
-}
