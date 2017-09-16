@@ -25,7 +25,7 @@ func InitDB(host, port, user, pwd, dbName, driverName string) error {
 		return err
 	}
 	//初始化table
-	initTable()
+	initAllTable()
 	return nil
 }
 

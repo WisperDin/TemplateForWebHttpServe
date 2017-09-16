@@ -7,7 +7,8 @@ import (
 	"fmt"
 	"net/http"
 	"./common/logger"
-
+	"github.com/gorilla/mux"
+	"./controller"
 )
 
 func main() {
@@ -16,11 +17,14 @@ func main() {
 	log.Println(conf.App)
 	logger.Init()
 
-	//api
-	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request){
-		fmt.Fprint(w,"welcome to my web server template!")
-	})
+	//serve frontend artifact
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./dist"))))
 
-	http.ListenAndServe(fmt.Sprintf(":%s", conf.App.ServerPort), nil)
+	//api
+	r := mux.NewRouter()
+
+	r.HandleFunc("/api/login",controller.Login).Methods(http.MethodPost)
+
+	http.ListenAndServe(fmt.Sprintf(":%s", conf.App.ServerPort), r)
 
 }
