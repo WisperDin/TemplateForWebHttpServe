@@ -36,6 +36,7 @@ func main() {
 
 	//对于/路由 要放后面
 	webPath:=prepareWebPath()
+	log.Println(webPath)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(webPath))))
 	http.ListenAndServe(fmt.Sprintf(":%s", conf.App.ServerPort), r)
 
