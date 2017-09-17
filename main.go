@@ -13,6 +13,7 @@ import (
 	"os"
 	"strconv"
 	"io"
+	"path/filepath"
 )
 
 func main() {
@@ -21,6 +22,7 @@ func main() {
 	log.Println(conf.App)
 	logger.Init()
 	view.Init("./dist/")
+
 
 	r := mux.NewRouter()
 
@@ -33,9 +35,26 @@ func main() {
 	r.HandleFunc("/api/login",controller.Login).Methods(http.MethodPost,http.MethodOptions)
 
 	//对于/路由 要放后面
-	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./dist/"))))
+	webPath:=prepareWebPath()
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(webPath))))
 	http.ListenAndServe(fmt.Sprintf(":%s", conf.App.ServerPort), r)
 
+}
+
+func prepareWebPath()string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	webPath := dir + "/dist/"
+	_, err = os.Stat(webPath)
+	if os.IsNotExist(err) {
+		log.Fatal("cann't find directory " + webPath)
+	}
+	if err!=nil {
+		log.Fatal("other error" + err.Error())
+	}
+	return webPath
 }
 
 //关闭当前进程
