@@ -42,6 +42,11 @@ func Login(w http.ResponseWriter, r *http.Request){
 	}
 
 	logger.Info("controller-Login",fmt.Sprintf("User %s login success",username))
+
+	//设置session
+	token := common.SaveSession(user[0].ID,user[0].UserName)
+	cookie := http.Cookie{Name: "Token", Value: token, Path: "/", MaxAge: 86400}
+	http.SetCookie(w,&cookie)
 	common.ReturnFormat(w, LOGIN_SUCCESS, nil)
 	return
 }
