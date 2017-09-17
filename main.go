@@ -23,10 +23,12 @@ func main() {
 
 	//serve frontend artifact
 	r.PathPrefix("/page/").HandlerFunc(view.LoadTemplate)
-	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./dist/"))))
-	//api
-	r.HandleFunc("/api/login",controller.Login).Methods(http.MethodPost)
 
+	//api
+	r.HandleFunc("/api/login",controller.Login).Methods(http.MethodPost,http.MethodOptions)
+
+	//对于/路由 要放后面
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./dist/"))))
 	http.ListenAndServe(fmt.Sprintf(":%s", conf.App.ServerPort), r)
 
 }
