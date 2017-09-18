@@ -6,12 +6,13 @@ package common
 
 import (
 	"fmt"
-	//"net/http"
 	"./logger"
 	"strconv"
 	"crypto/md5"
 	"time"
 	"io"
+	"net/http"
+	."../constant"
 )
 
 type Session struct {
@@ -55,6 +56,33 @@ func SaveSession(id int64,username string) (token string) {
 	return
 }
 
+//检查session是否合法
+func CheckSession(r *http.Request) int {
+	useridRaw := r.FormValue("userid")
+	usernameRaw := r.FormValue("username")
+	if len(useridRaw)<=0||len(usernameRaw)<=0{
+		return SESSION_PARA_ERR
+	}
+	userid,err:=strconv.Atoi(useridRaw)
+	if err != nil {
+		return SESSION_SYS_ERR
+	}
+
+	sessionKey := GetSessionID(int64(userid),usernameRaw)
+	session := UserSession[sessionKey]
+	if session == nil {
+		return SESSION_NO_AUTH
+	}
+
+	//从cookie中获取token
+	cookie,err:=r.Cookie("Token")
+	if cookie.Value!=session.Token {
+		return SESSION_TOKEN_NOTMATCH
+	}
+
+	return SESSION_OK
+}
+
 /*//移除一个session
 func RemoveSession(r *http.Request) {
 *//*	sessionKey := GetSessionID()
@@ -64,14 +92,6 @@ func RemoveSession(r *http.Request) {
 	}
 	UserSession[sessionKey] = session*//*
 }
+*/
 
-//检查session是否合法
-func CheckSession(r *http.Request) error {
-*//*	sessionKey := GetSessionID()
-	session := UserSession[sessionKey]
-	if session == nil {
-		err := fmt.Errorf("用户session校验失败，session不存在！")
-		return err
-	}
-	return nil*//*
-}*/
+

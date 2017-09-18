@@ -11,7 +11,7 @@ type LogInfo struct {
 	Level       string `json:"level"`
 	FuncName 		string `json:"funcName"`
 	Content     string `json:"content"`
-	CreatedAt   time.Time `json:"createdAt"`
+	CreatedAt   time.Time `json:"createdat"`
 }
 
 const LogInfoTableName = "loginfo"

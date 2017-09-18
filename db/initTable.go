@@ -31,6 +31,20 @@ func initAllTable(){
 		log.Println("initTable user fail! "+err.Error())
 		return
 	}
+
+	err = initTable(`create table if not exists article(
+		id SERIAL NOT NULL,
+		theme varchar(20) NOT NULL,
+		content text NOT NULL,
+		imgurl varchar(50),
+		createdat timestamp NOT NULL default now(),
+		updateat timestamp NOT NULL default now(),
+		PRIMARY KEY ("id")
+	);`)
+	if err != nil {
+		log.Println("initTable article fail! "+err.Error())
+		return
+	}
 }
 
 func initTable(sql string)(error){
