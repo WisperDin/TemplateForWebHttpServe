@@ -75,7 +75,11 @@ func CheckSession(r *http.Request) int {
 	}
 
 	//从cookie中获取token
-	cookie,err:=r.Cookie("Token")
+	cookie,err:=r.Cookie("token")
+	if err != nil {
+		logger.Error("CheckSession","get Cookie failed "+err.Error())
+		return SESSION_NO_COOKIE
+	}
 	if cookie.Value!=session.Token {
 		return SESSION_TOKEN_NOTMATCH
 	}

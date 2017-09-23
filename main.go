@@ -32,7 +32,10 @@ func main() {
 	//api
 	r.HandleFunc("/exit", httpShutDownHandler)
 
+	r.HandleFunc("/api/logintest",controller.Login).Methods(http.MethodGet)
 	r.HandleFunc("/api/login",controller.Login).Methods(http.MethodPost,http.MethodOptions)
+	r.HandleFunc("/api/article", controller.GetArticle).Methods(http.MethodGet)
+	r.HandleFunc("/api/insert/article", controller.SaveArticle).Methods(http.MethodPost)
 
 	//对于/路由 要放后面
 	webPath:=prepareWebPath()

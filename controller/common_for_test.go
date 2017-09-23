@@ -31,14 +31,23 @@ func muxEngine() *mux.Router {
 	r.HandleFunc("/api/article",
 		GetArticle).
 		Methods(http.MethodGet)
+	r.HandleFunc("/api/insert/article",
+		SaveArticle).
+		Methods(http.MethodPost)
+
 	return r
 }
 
-func mockGetArticle(t *testing.T, url string, expectedCode int){
+func mockGetArticle(t *testing.T, url string, expectedCode int, token string){
 /*	headers := make(map[string]string)
 	headers["Content-type"] = "application/x-www-form-urlencoded"*/
+
+	cookie := make(map[string]string)
+	cookie["Token"] = token
+
 	r.GET(url).
 		SetDebug(true).
+		SetCookie(cookie).
 		//SetHeader(headers).
 		Run(muxEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 		body, err := ioutil.ReadAll(r.Body)
@@ -52,19 +61,23 @@ func mockGetArticle(t *testing.T, url string, expectedCode int){
 			log.Println(err)
 			return
 		}
-		log.Println(fb)
+		log.Println(string(body))
 	})
 }
 
-func mockLoginRqs(t *testing.T, url string, expectedCode int) {
+
+func mockPostRqs(t *testing.T, url string, body string,token string) {
 	headers := make(map[string]string)
 	headers["Content-type"] = "application/x-www-form-urlencoded"
 
-	body:="username=123&pwd=1234"
+	cookie := make(map[string]string)
+	cookie["Token"] = token
+	log.Println(r)
 	r.POST(url).
 		SetDebug(true).
 		SetHeader(headers).
 		SetBody(body).
+		SetCookie(cookie).
 		Run(muxEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -80,3 +93,4 @@ func mockLoginRqs(t *testing.T, url string, expectedCode int) {
 		log.Println(fb)
 	})
 }
+

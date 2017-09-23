@@ -17,7 +17,7 @@ func ReturnFormat(w http.ResponseWriter, code int, data interface{}) {
 }
 
 func SetContent(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:4200")             //允许访问所有域
 	w.Header().Add("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
 	w.Header().Add("Access-Control-Allow-Credentials", "true")
 }

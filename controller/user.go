@@ -9,10 +9,11 @@ import (
 	"../common/logger"
 )
 
+
 func Login(w http.ResponseWriter, r *http.Request){
 	common.SetContent(w)
-	username := r.PostFormValue("username")
-	pwd := r.PostFormValue("pwd")
+	username := r.FormValue("username")
+	pwd := r.FormValue("pwd")
 	if username == "" {
 		common.ReturnFormat(w, LOGIN_PARA_ERR, nil)
 		return
@@ -45,7 +46,13 @@ func Login(w http.ResponseWriter, r *http.Request){
 
 	//设置session
 	token := common.SaveSession(user[0].ID,user[0].UserName)
-	cookie := http.Cookie{Name: "Token", Value: token, Path: "/", MaxAge: 86400}
+	cookie := http.Cookie{
+		Name: "token",
+		Value: token,
+		Path:     "/",
+		HttpOnly: true,
+		MaxAge:   3600 * 24 * 10,
+	}
 	http.SetCookie(w,&cookie)
 	common.ReturnFormat(w, LOGIN_SUCCESS, user[0])
 	return

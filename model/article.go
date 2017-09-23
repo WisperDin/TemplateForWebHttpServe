@@ -4,12 +4,14 @@ import (
 	"time"
 	"fmt"
 	."../db"
+	"database/sql"
 )
 
 type Artcle struct {
 	ID          int64  `json:"id"`
 	Theme       string `json:"theme"`
 	Content     string `json:"content"`
+	imgUrl      sql.NullString `json:"-"`
 	ImgUrl      string `json:"imgurl"`
 	CreatedAt   time.Time `json:"createdat"`
 	UpdateAt    time.Time `json:"updateat"`
@@ -17,7 +19,18 @@ type Artcle struct {
 
 const articleTableName  = "article"
 
-//todo 已有问题 有些列为空就scan出错
+func (a *Artcle) Insert() (err error) {
+	stmt, err := Db.Prepare(fmt.Sprintf("INSERT INTO %s(theme,content,imgurl,createdat,updateat) "+
+		"VALUES($1,$2,$3,$4,$5)", articleTableName))
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	a.CreatedAt = time.Now()
+	a.UpdateAt = a.CreatedAt
+	_, err = stmt.Exec(a.Theme, a.Content,a.ImgUrl,a.CreatedAt,a.UpdateAt)
+	return
+}
 
 func FindArticle(condition, limit, order string) ([]Artcle, error) {
 	result := []Artcle{}
@@ -27,7 +40,10 @@ func FindArticle(condition, limit, order string) ([]Artcle, error) {
 	}
 	for rows.Next() {
 		tmp := Artcle{}
-		err = rows.Scan(&tmp.ID, &tmp.Theme, &tmp.Content, &tmp.ImgUrl,&tmp.CreatedAt,&tmp.UpdateAt)
+		err = rows.Scan(&tmp.ID, &tmp.Theme, &tmp.Content, &tmp.imgUrl,&tmp.CreatedAt,&tmp.UpdateAt)
+		if tmp.imgUrl.Valid {
+			tmp.ImgUrl=tmp.imgUrl.String
+		}
 		result = append(result, tmp)
 	}
 	return result, err
