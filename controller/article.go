@@ -74,6 +74,10 @@ func GetArticle(w http.ResponseWriter, r *http.Request){
 		common.ReturnFormat(w,ARTICLE_NOTEXIST,nil)
 		return
 	}
+	//time format
+	for _,article:=range articles {
+		(*article).CreatedAt=(*article).CreatedAtTime.Format("2006-01-02 15:04:05")
+	}
 	common.ReturnFormat(w,ARTICLE_SUCCESS,articles)
 	logger.Info("GetArticle",fmt.Sprintf("limitStr %s orderStr %s",limitStr,orderStr))
 }
