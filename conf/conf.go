@@ -22,6 +22,8 @@ type tomlFile struct {
 
 	ServerHost     string `toml:"serverHost"`
 	ServerPort     string `toml:"serverPort"`
+
+	WebPageHost    string  `toml:"WebPageHost"`
 }
 
 var App *tomlFile
