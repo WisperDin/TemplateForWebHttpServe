@@ -36,6 +36,8 @@ func main() {
 	r.HandleFunc("/api/login",controller.Login).Methods(http.MethodPost,http.MethodOptions)
 	r.HandleFunc("/api/article", controller.GetArticle).Methods(http.MethodGet)
 	r.HandleFunc("/api/insert/article", controller.SaveArticle).Methods(http.MethodPost)
+	r.HandleFunc("/api/msg", controller.GetMsg).Methods(http.MethodGet)
+	r.HandleFunc("/api/insert/msg", controller.SaveMsg).Methods(http.MethodPost)
 
 	//对于/路由 要放后面
 	webPath:=prepareWebPath()

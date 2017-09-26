@@ -18,6 +18,8 @@ type tomlFile struct {
 	DBPassword     string `toml:"DBPassword"`
 	DBName         string `toml:"DBName"`
 
+	DBTestName         string `toml:"DBTestName"`
+
 	ServerHost     string `toml:"serverHost"`
 	ServerPort     string `toml:"serverPort"`
 }

@@ -46,7 +46,9 @@ func SaveArticle(w http.ResponseWriter, r *http.Request){
 		common.ReturnFormat(w,ARTICLE_SYS_ERR,nil)
 		return
 	}
+
 	common.ReturnFormat(w,ARTICLE_SUCCESS,nil)
+	logger.Info("SaveArticle","SaveArticle SUCCESS by user XX")
 }
 
 
@@ -79,5 +81,5 @@ func GetArticle(w http.ResponseWriter, r *http.Request){
 		(*article).CreatedAt=(*article).CreatedAtTime.Format("2006-01-02 15:04:05")
 	}
 	common.ReturnFormat(w,ARTICLE_SUCCESS,articles)
-	logger.Info("GetArticle",fmt.Sprintf("limitStr %s orderStr %s",limitStr,orderStr))
+	logger.Info("GetArticle",fmt.Sprintf("limitStr %s orderStr %s by user XX",limitStr,orderStr))
 }
