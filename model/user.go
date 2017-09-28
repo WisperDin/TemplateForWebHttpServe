@@ -16,6 +16,17 @@ type User struct {
 
 const userTableName = "user"
 
+func (a *User) Insert() (err error) {
+	stmt, err := Db.Prepare(fmt.Sprintf(`INSERT INTO "%s"(UserName,Password,createdat) VALUES($1,$2,$3)`, userTableName))
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	a.CreatedAt = time.Now()
+	_, err = stmt.Exec(a.UserName, a.Password,a.CreatedAt)
+	return
+}
+
 func FindUser(condition, limit, order string) ([]User, error) {
 	result := []User{}
 	rows, err := Db.Query(fmt.Sprintf(`SELECT id,username,password,createdat FROM "%s" %s %s %s`, userTableName, condition, order, limit))

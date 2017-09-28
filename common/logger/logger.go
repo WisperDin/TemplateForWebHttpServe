@@ -50,6 +50,11 @@ func Error(funcName,msg string){
 	logInf.Insert()
 }
 
+func Sync(){
+	newlogger.Sync()
+}
+
+
 
 
 
