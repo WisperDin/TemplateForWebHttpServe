@@ -28,7 +28,7 @@ func TestLogin(t *testing.T) {
 			t.Error("r null")
 			return false
 		}
-		if r.Code != 1000{
+		if r.Code != 1005{
 			t.Error("r.Code != 1000")
 			return false
 		}
